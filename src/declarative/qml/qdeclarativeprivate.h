@@ -55,6 +55,7 @@
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qvariant.h>
+#include <QtCore/qurl.h>
 
 QT_BEGIN_HEADER
 
@@ -233,13 +234,36 @@ namespace QDeclarativePrivate
         AutoParentFunction function;
     };
 
+    struct RegisterComponent {
+        const QUrl &url;
+        const char *uri;
+        const char *typeName;
+        int majorVersion;
+        int minorVersion;
+    };
+
     enum RegistrationType {
         TypeRegistration       = 0, 
         InterfaceRegistration  = 1,
-        AutoParentRegistration = 2
+        AutoParentRegistration = 2,
+        ComponentRegistration  = 3
     };
 
     int Q_DECLARATIVE_EXPORT qmlregister(RegistrationType, void *);
+
+    inline int Q_DECLARATIVE_EXPORT qmlRegisterType(const QUrl &url, const char *uri, int versionMajor, int versionMinor, const char *qmlName)
+    {
+        RegisterComponent type = {
+            url,
+            uri,
+            qmlName,
+            versionMajor,
+            versionMinor
+        };
+
+        return qmlregister(QDeclarativePrivate::ComponentRegistration, &type);
+    }
+
 }
 
 QT_END_NAMESPACE
