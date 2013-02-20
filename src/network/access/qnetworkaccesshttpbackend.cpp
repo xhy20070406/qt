@@ -525,6 +525,7 @@ void QNetworkAccessHttpBackend::postRequest()
     QVariant v(property("_q_networksession"));
     if (v.isValid())
         delegate->networkSession = qvariant_cast<QSharedPointer<QNetworkSession> >(v);
+    delegate->networkConfiguration = manager->networkConfiguration;
 #endif
 
     // For the synchronous HTTP, this is the normal way the delegate gets deleted
